@@ -1,2 +1,2 @@
 # employee-tracker
-Module 12 Challenge Module
+Module 12 Challenge Repository
