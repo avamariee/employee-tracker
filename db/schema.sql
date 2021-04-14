@@ -1,11 +1,7 @@
-DROP DATABASE IF EXISTS company;
-/* if the database already exists, then delete it.*/
+DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS department;
 
-CREATE DATABASE company;
-/* create the company database */
-
-USE company;
-/* use the company database */
 
 CREATE TABLE department (
      id INTEGER AUTO_INCREMENT PRIMARY KEY,
@@ -17,6 +13,7 @@ CREATE TABLE roles (
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(20,2) NOT NULL,
     department_id INTEGER NOT NULL
+    /* this needs to be a foreign key */
     );
 
 CREATE TABLE employee (
@@ -24,5 +21,7 @@ CREATE TABLE employee (
      first_name VARCHAR(30) NOT NULL,
      last_name VARCHAR(30) NOT NULL,
      role_id INTEGER NOT NULL,
+     /* this needs to be a foreign key */
      manager_id INTEGER
+     /* this needs to be a foreign key */
      );

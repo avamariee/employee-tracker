@@ -26,4 +26,4 @@ VALUES
 ('Hussein', 'Farran', 4, 0),
 ('Ash', 'Ketchum', 1, 0),
 ('Deckard', 'Cain', 2, 0),
-('Guy', 'Fieri', 1, 0)
+('Guy', 'Fieri', 1, 0);
