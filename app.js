@@ -1,6 +1,7 @@
 const mysql = require('mysql2')
 const inquirer = require('inquirer');
 const cTable = require('console.table');
+const db = require('./db/connection')
 
 // console.table([
 //   {
@@ -18,7 +19,7 @@ const cTable = require('console.table');
 // foo   10
 // bar   20
 
-questionsStart();
+
 
 function questionsStart() {
   inquirer
@@ -40,10 +41,10 @@ function questionsStart() {
       }
     ])
     .then(answers => {
-      console.log(answers.start)
+      // console.log(answers.start)
       switch (answers.start) {
         case "View All Departments":
-          // function to view the department in mysql
+          viewDepartments();
           break;
         case "View All Roles":
           // function to view the roles of all employees
@@ -62,17 +63,54 @@ function questionsStart() {
           break;
         case "Update an Employee Role":
           // function to update an employee role
-          break;
       }
-
-
     })
     .catch(error => {
       if (error) {
-        // res.status(400).json({ error: err.message });
-        // return;
-      } else {
-        // Something else went wrong
+        console.log(error)
       }
     });
 }
+
+function viewDepartments(){
+  // select all data from the department table in mysql
+  const sql = `SELECT * FROM department`;
+  db.query(sql, (err, rows) => {
+    if (err){
+      console.table('There was an error. ')
+      return; 
+    }
+   return console.table(rows)
+   
+  })
+
+  questionsStart();
+
+}
+
+// function viewRoles(){
+
+// }
+
+// function viewEmployees(){
+
+// }
+
+// function addDepartment(){
+
+// }
+
+// function addRole(){
+
+// }
+
+// function addEmployee(){
+
+// }
+
+// function updateEmployee(){
+
+// }
+
+
+questionsStart();
