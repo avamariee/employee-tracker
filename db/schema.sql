@@ -12,9 +12,8 @@ CREATE TABLE roles (
     id INTEGER AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL(20,2) NOT NULL,
-    department_id INTEGER NOT NULL,
+    department_id INTEGER NOT NULL
     /* this needs to be a foreign key */
-    FOREIGN KEY (department_id) REFERENCES department(id)
     );
 
 CREATE TABLE employee (
@@ -23,8 +22,6 @@ CREATE TABLE employee (
      last_name VARCHAR(30) NOT NULL,
      role_id INTEGER NOT NULL,
      /* this needs to be a foreign key */
-     FOREIGN KEY (role_id) REFERENCES roles(id),
-     manager_id INTEGER,
+     manager_id INTEGER
      /* this needs to be a foreign key */
-     FOREIGN KEY (manager_id) REFERENCES employee(id)
      );

@@ -47,13 +47,13 @@ function questionsStart() {
           viewDepartments();
           break;
         case "View All Roles":
-          // function to view the roles of all employees
+          viewRoles();
           break;
         case "View All Employees":
-          // function to view all of the employees
+          viewEmployees();
           break;
         case "Add a Department":
-          // function to add a department
+          addDepartment();
           break;
         case "Add a Role":
           // function to add a role to an employee
@@ -77,7 +77,7 @@ function viewDepartments(){
   const sql = `SELECT * FROM department`;
   db.query(sql, (err, rows) => {
     if (err){
-      console.table('There was an error. ')
+      console.log('There was an error. ' + err)
       return; 
     }
    return console.table(rows)
@@ -88,17 +88,51 @@ function viewDepartments(){
 
 }
 
-// function viewRoles(){
+function viewRoles(){
 
-// }
+  const sql = `SELECT * FROM roles`;
+  db.query(sql, (err, rows) => {
+    if (err){
+      console.log('There was an error. ' + err)
+      return;
+    }
+    return console.table(rows);
+  })
 
-// function viewEmployees(){
+  questionsStart();
 
-// }
+}
 
-// function addDepartment(){
+function viewEmployees(){
+  const sql = `SELECT * FROM employee`;
+  db.query(sql, (err, rows) => {
+    if (err){
+      console.log('There was an error. ' + err)
+      return;
+    }
+    return console.table(rows);
+  })
+  questionsStart();
+}
 
-// }
+function addDepartment(){
+  inquirer.prompt({
+    type: 'input',
+    name: 'AddDepartment',
+    message: 'Please enter the name of the department you would like to add.'
+  })
+  .then((answers) => {
+    db.query(`INSERT INTO department (name) VALUES (?)`, answers, (err, rows) => {
+      if(err){
+        console.log('There was an error. ' + err)
+        return;
+      }
+      console.log('The department was successfully added to the database!')
+      viewDepartments();
+    })
+  })
+
+}
 
 // function addRole(){
 
