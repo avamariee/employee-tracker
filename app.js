@@ -28,7 +28,6 @@ function questionsStart() {
       {
         type: 'list',
         name: 'start',
-        pageSize: 20,
         message: 'Welcome! What would you like to do?',
         choices: [
           'View All Departments',
@@ -113,7 +112,7 @@ function viewRoles() {
 }
 
 function viewEmployees() {
-  const sql = `SELECT * FROM employee INNER JOIN roles ON employee.role_id = roles.id INNER JOIN employee AS manager ON employee.manager_id = manager.id`;
+  const sql = `SELECT employee.id, employee.first_name, employee.last_name, title, salary, employee.manager_id FROM employee INNER JOIN roles ON employee.role_id = roles.id INNER JOIN employee AS manager ON employee.manager_id = manager.id ORDER BY employee.id ASC`;
   db.query(sql, (err, rows) => {
     if (err) {
       console.log('There was an error. ' + err)
@@ -217,7 +216,7 @@ function addEmployee() {
           return;
         }
         console.log('The employee was successfully added!')
-        viewEmployees();
+        questionsStart();
       });
     })
 }
@@ -229,13 +228,8 @@ function updateEmployee() {
   inquirer.prompt([
     {
       type: 'input',
-      name: 'first_name',
-      message: 'Please enter the first name of the employee.'
-    },
-    {
-      type: 'input',
-      name: 'last_name',
-      message: 'Please enter the last name of the employee.'
+      name: 'employee_id',
+      message: 'Please enter the ID of the employee.'
     },
     {
       type: 'input',
@@ -243,14 +237,14 @@ function updateEmployee() {
       message: 'Please enter the new role ID of the employee.'
     }])
     .then((answers) => {
-      db.query(`UPDATE employee.role VALUES(?) WHERE first_name = ? last_name = ? `, [answers.first_name, answers.last_name, answers.role], (err) => {
+      db.query(`UPDATE employee SET role_id = ? WHERE id = ?;`, [answers.role, answers.employee_id], (err) => {
         // not sure how to go about this one
         if (err) {
           console.log('There was an error. ' + err)
           return;
         }
         console.log('The employee was successfully updated!')
-        viewEmployees();
+        questionsStart();
       });
     })
 
