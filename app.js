@@ -86,39 +86,42 @@ function viewDepartments() {
       console.log('There was an error. ' + err)
       return;
     }
-    return console.table(rows)
+    console.table(rows)
+
+    questionsStart();
 
   })
 
-  questionsStart();
+
 
 }
 
 function viewRoles() {
 
-  const sql = `SELECT * FROM roles`;
+  const sql = `SELECT roles.id, title, salary, department_name FROM roles INNER JOIN department ON roles.department_id = department.id`;
   db.query(sql, (err, rows) => {
     if (err) {
       console.log('There was an error. ' + err)
       return;
     }
-    return console.table(rows);
+    console.table(rows);
+    questionsStart();
   })
 
-  questionsStart();
+
 
 }
 
 function viewEmployees() {
-  const sql = `SELECT * FROM employee`;
+  const sql = `SELECT * FROM employee INNER JOIN roles ON employee.role_id = roles.id INNER JOIN employee AS manager ON employee.manager_id = manager.id`;
   db.query(sql, (err, rows) => {
     if (err) {
       console.log('There was an error. ' + err)
       return;
     }
-    return console.table(rows);
+    console.table(rows);
+    questionsStart();
   })
-  questionsStart();
 }
 
 function addDepartment() {
@@ -143,7 +146,7 @@ function addDepartment() {
 }
 
 function addRole() {
-  inquirer.prompt(
+  inquirer.prompt([
     {
       type: 'input',
       name: 'AddRole',
@@ -159,9 +162,12 @@ function addRole() {
       name: 'department_id',
       message: 'Please enter the ID of the department that this role belongs to.'
     }
-  )
+  ])
     .then((answers) => {
-      db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('?','?','?') `, answers.addRole, answers.salary, answers.department_id, (err) => {
+
+      let answersArray = [answers.AddRole, answers.salary, answers.department_id]
+
+      db.query(`INSERT INTO roles (title, salary, department_id) VALUES (?,?,?) `, answersArray, (err) => {
         // "Incorrect decimal value: '?' for column 'salary' at row 1"
         if (err) {
           console.log('There was an error. ' + err)
@@ -177,7 +183,7 @@ function addRole() {
 function addEmployee() {
   // WHEN I choose to add an employee
   // THEN I am prompted to enter the employee’s first name, last name, role, and manager and that employee is added to the database
-  inquirer.prompt(
+  inquirer.prompt([
     {
       type: 'input',
       name: 'first_name',
@@ -202,10 +208,10 @@ function addEmployee() {
           2,
           3
         ]
-    })
+    }
+  ])
     .then((answers) => {
-      db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?) `, answers.first_name, answers.last_name, answers.role, answers.manager, (err) => {
-        // "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '?, ?, ?)' at line 1""
+      db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?) `, [answers.first_name, answers.last_name, answers.role, answers.manager], (err) => {
         if (err) {
           console.log('There was an error. ' + err)
           return;
@@ -216,9 +222,38 @@ function addEmployee() {
     })
 }
 
-function updateEmployee(){
-// WHEN I choose to update an employee role
-// THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+function updateEmployee() {
+  // WHEN I choose to update an employee role
+  // THEN I am prompted to select an employee to update and their new role and this information is updated in the database 
+
+  inquirer.prompt([
+    {
+      type: 'input',
+      name: 'first_name',
+      message: 'Please enter the first name of the employee.'
+    },
+    {
+      type: 'input',
+      name: 'last_name',
+      message: 'Please enter the last name of the employee.'
+    },
+    {
+      type: 'input',
+      name: 'role',
+      message: 'Please enter the new role ID of the employee.'
+    }])
+    .then((answers) => {
+      db.query(`UPDATE employee.role VALUES(?) WHERE first_name = ? last_name = ? `, [answers.first_name, answers.last_name, answers.role], (err) => {
+        // not sure how to go about this one
+        if (err) {
+          console.log('There was an error. ' + err)
+          return;
+        }
+        console.log('The employee was successfully updated!')
+        viewEmployees();
+      });
+    })
+
 
 }
 
